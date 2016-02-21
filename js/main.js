@@ -22,14 +22,30 @@
       keys[kc] = e.type == 'keydown';
     };
 
-    /// character movement update
+    var posX;
+    var posY;
+
+    // character movement update
     var moveCharacter = function(dx, dy){
       character.x += (dx||0) * character.speedMultiplier;
       character.y += (dy||0) * character.speedMultiplier;
 
-      character.element.style.left = character.x + '%';
-      character.element.style.top = character.y + '%';
+      posX = character.element.style.left = character.x + '%';
+      posY = character.element.style.top = character.y + '%';
+
+      socket.emit("ShipPosition", {
+          value : [posX, posY]
+      });
     };
+    
+    var yolo = false;
+    if(yolo == false) {
+      socket.on("ShipPosition", function(data){
+          console.log(data.value[0]);
+      });
+      var yolo = true;
+    }  
+    
 
     /// character control
     var detectCharacterMovement = function(){
